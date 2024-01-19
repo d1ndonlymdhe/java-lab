@@ -6,6 +6,7 @@
             bottom=0.5in,
             ]{geometry}
 \usepackage{minted}
+\usepackage{svg}
 \setlength{\parindent}{0pt}
 \begin{document}
 {\Huge \textbf{Title:} Java Basics}
@@ -90,35 +91,15 @@
 \newpage
 \par
 \textbf{Program 1: Program to demonstrate that default constructor is created by compiler if no constructors are explicitly defined.}
-\begin{minted}{java}
-    public class DefaultConstructor {
-        int a;
-        public static void main(String[] args) {
-            DefaultConstructor c = new DefaultConstructor();
-            //equivalent program in c will give randowm value
-            System.out.println(c.a);
-        }
-    }
-\end{minted}
+\inputminted{java}{DefaultConstructor.java}
 \par
 \textbf{Output:}
 0
 \\
 \\
 \par
-\textbf{Program 2: Program to o test default constructor is not  created automatically if any other constructor is defined explicitly.}
-\begin{minted}{java}
-    public class NoDefault {
-        int a;
-        NoDefault(int a){
-            this.a = a;
-        }
-        public static void main(String[] args) {
-            //Error: The constructor NoDefault() is undefined
-            NoDefault nd = new NoDefault();
-        }
-    }
-\end{minted}
+\textbf{Program 2: Program to test default constructor is not  created automatically if any other constructor is defined explicitly.}
+\inputminted{java}{NoDefault.java}
 \par
 \textbf{Output:}
 \begin{minted}{bash}
@@ -133,42 +114,7 @@
 \end{minted}
 \par
 \textbf{Program 3: Program to demonstrate the use of all types of constructors.}
-\begin{minted}{java}
-    class Student {
-        int roll;
-        String name;
-
-        // parameterized constructor
-        Student(int roll, String name) {
-            this.roll = roll;
-            this.name = name;
-        }
-        // default constructor
-        Student() {
-            roll = 0;
-            name = "";
-        }
-        // Copy constructor
-        Student(Student S) {
-            roll = S.roll;
-            name = S.name;
-        }
-        public String toString() {
-            return "Roll = " + this.roll + " Name = " + this.name;
-        }
-    }
-
-    public class AllConstructors {
-        public static void main(String[] args) {
-            Student S1 = new Student();
-            Student S2 = new Student(4,"hari");
-            Student S3 = new Student(S2);
-            System.out.println(S1);
-            System.out.println(S2);
-            System.out.println(S3);
-        }
-    }
-\end{minted}
+\inputminted{java}{AllConstructors.java}
 \par
 \textbf{Output:}
 \begin{verbatim}
@@ -178,41 +124,7 @@ Roll = 4 Name = hari
 \end{verbatim}
 \par
 \textbf{Program 4: Program to demonstrate reference type with copy constructor:}
-\begin{minted}{java}
-    class Room{
-        float area;
-        boolean copied;
-        Room(float area){
-            this.area = area;
-            copied = false;
-            area = 0;
-        }
-        Room(Room R){
-            this.area = R.area;
-            R.copied = true;
-        }
-        public String toString() {
-            return "Area = " + area + " copied = " + copied;
-        }
-    }
-
-
-    public class CopyConstructor {
-        public static void main(String[] args) {
-            float roomArea =  50.56f;
-            //roomArea is passed as value
-            Room room1 = new Room(roomArea);
-            //No change in the roomArea variable
-            System.out.println(roomArea);
-            //room1 is passed as reference
-            Room room2 = new Room(room1);
-            System.out.println("Room 1 ");
-            System.out.println(room1);
-            System.out.println("Room 2");
-            System.out.println(room2);
-        }
-    }
-\end{minted}
+\inputminted{java}{CopyConstructor.java}
 \par
 \textbf{Output:}
 \begin{verbatim}
@@ -224,69 +136,7 @@ Area = 50.56 copied = false
 \end{verbatim}
 \par
 \textbf{Program 5: Program to demonstrate the use of access specifier and how getter and setter helps to access the private attributes.}
-\begin{minted}{java}
-    import java.util.Scanner;
-
-    class Account {
-        private String username;
-        private String password;
-        private static int accountCount = 0;
-        public int id;
-        Account(){
-            id = accountCount;
-            accountCount++;
-        }
-        public boolean setUsername(String username) {
-            if (username.contains("BadWord")) {
-                System.out.println("Do not include bad words");
-                return false;
-            }
-            this.username = username;
-            return true;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public boolean setPassword(String password) {
-            if (password.length() < 8) {
-                System.out.println("Minimum password length is 8");
-                return false;
-            }
-            this.password = password;
-            return true;
-        }
-
-    }
-
-    public class AccessSpecifier {
-        public static void main(String[] args) {
-            Scanner in = new Scanner(System.in);
-            Account newAccount = new Account();
-            boolean success = false;
-            String line = "";
-            while (!success) {
-                System.out.println("Enter username");
-                line = in.next();
-                success = newAccount.setUsername(line);
-            }
-            success = false;
-            while (!success) {
-                System.out.println("Enter password");
-                line = in.next();
-                success = newAccount.setPassword(line);
-            }
-            System.out.println("id = " + newAccount.id + " username = " + newAccount.getUsername() + " password = " + newAccount.getPassword());
-            in.close();
-        }
-    }
-
-\end{minted}
+\inputminted{java}{AccessSpecifier.java}
 \par
 \textbf{Output:}
 \begin{verbatim}
@@ -304,53 +154,37 @@ id = 0 username = ayush password = abcdefghij
 \end{verbatim}
 \par
 \textbf{Program 6: Program to demonstrate the use of exception handling}
-\begin{minted}{java}
-    import java.util.Scanner;
-
-    public class ExceptionHandling {
-        public static void main(String[] args) {
-            Scanner in = new Scanner(System.in);
-            int a = 0;
-            int b = 0;
-            String line = "";
-            System.out.println("Enter value for a");
-            line = in.next();
-            try {
-                a = Integer.parseInt(line);
-            } catch (NumberFormatException e) {
-                System.out.println("Unhandled input " + e);
-            }
-            System.out.println("Enter value for b");
-            line = in.next();
-            try {
-                b = Integer.parseInt(line);
-            } catch (NumberFormatException e) {
-                System.out.println("Unhandled input " + e);
-            }
-            float c = 0;
-            try {
-                c = a / b;
-            } catch (ArithmeticException e) {
-                System.out.println("Division error " + e);
-            } finally {
-                System.out.println("c = " + c);
-            }
-
-            in.close();
-        }
-    }
-\end{minted}
+\inputminted{java}{ExceptionHandling.java}
 \par
 \textbf{Output:}
 \begin{verbatim}
 Enter value for a
 5
 Enter value for b
-a
-Unhandled input java.lang.NumberFormatException: For input string: "a"
-Division error java.lang.ArithmeticException: / by zero
+e
+Unhandled input java.lang.NumberFormatException: For input string: "e"
+Set b as 0
+/ by zero
 c = 0.0
 \end{verbatim}
 \par
+\textbf{Program 7: Program to creeate a Time class with various attributes and methods}
+\\
+\includesvg{classDiagram.svg}
+\inputminted{java}{Lab2.java}
+\textbf{Output:}
+\begin{verbatim}
+15:05:07
+15:05:07
+15:06:00
+Second should be > 0
+Finally called
+05:52:11
+01:40:29
+00:08:20
+6
+\end{verbatim}
+\par
 \textbf{Conclusion:} We learned about different types of constructors, refernce types, copy constructors, Access Specifiers and Error handling.
+\par
 \end{document}

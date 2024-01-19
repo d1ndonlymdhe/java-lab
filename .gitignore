@@ -1,2 +1,5 @@
-\*.class\
-\*.log\
+*.log
+*.aux
+.vscode
+_minted-*
+svg-inkscape

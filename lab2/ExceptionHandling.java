@@ -12,6 +12,7 @@ public class ExceptionHandling {
             a = Integer.parseInt(line);
         } catch (NumberFormatException e) {
             System.out.println("Unhandled input " + e);
+            System.out.println("Set a as 0");
         }
         System.out.println("Enter value for b");
         line = in.next();
@@ -19,16 +20,16 @@ public class ExceptionHandling {
             b = Integer.parseInt(line);
         } catch (NumberFormatException e) {
             System.out.println("Unhandled input " + e);
+            System.out.println("Set b as 0");
         }
         float c = 0;
         try {
             c = a / b;
         } catch (ArithmeticException e) {
-            System.out.println("Division error " + e);
+           System.out.println(e.getMessage());
         } finally {
             System.out.println("c = " + c);
         }
-
         in.close();
     }
 }
