@@ -10,8 +10,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.TextField;
-import java.util.ArrayList;
-import java.util.List;
+
 
 class MyMenuItem {
     private Component menuItem;
@@ -131,51 +130,6 @@ class LayoutExample {
                 ))
         );
         mainFrame.setJMenuBar(menuBar.getMenuBar());
-        // mainFrame.setJMenuBar(createMenuBar(new ArrayList<>(
-        //         List.of(
-        //                 createMenu("File", new ArrayList<>(List.of(
-        //                         createMenuItem("Save"),
-        //                         createMenuItem("Save As"),
-        //                         createMenuSeperator(),
-        //                         createMenuItem("Exit")))),
-        //                 createMenu("Edit", new ArrayList<>(List.of(
-        //                         createNestedMenuItem(
-        //                                 createMenu("Format", new ArrayList<>(List.of(
-        //                                         createMenuItem("Bold"),
-        //                                         createMenuItem("Italics"),
-        //                                         createMenuItem("Underline"))))))))))));
         mainFrame.setVisible(true);
     }
-
-    // static MyMenuItem createMenuItem(String value) {
-    //     return new MyMenuItem(value);
-    // }
-
-    // static MyMenuItem createMenuSeperator() {
-    //     return new MyMenuItem();
-    // }
-
-    // static MyMenuItem createNestedMenuItem(JMenu subMenu) {
-    //     return new MyMenuItem(subMenu);
-    // }
-
-    // static JMenu createMenu(String menuName, ArrayList<MyMenuItem> menuItems) {
-    //     JMenu menu = new JMenu(menuName);
-    //     for (int i = 0; i < menuItems.size(); i++) {
-    //         if (menuItems.get(i).isSeperator()) {
-    //             menu.addSeparator();
-    //         } else {
-    //             menu.add(menuItems.get(i).getMenuItem());
-    //         }
-    //     }
-    //     return menu;
-    // }
-
-    // static JMenuBar createMenuBar(ArrayList<JMenu> menus) {
-    //     JMenuBar menuBar = new JMenuBar();
-    //     for (int i = 0; i < menus.size(); i++) {
-    //         menuBar.add(menus.get(i));
-    //     }
-    //     return menuBar;
-    // }
 }
