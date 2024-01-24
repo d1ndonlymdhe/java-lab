@@ -111,9 +111,7 @@ class LayoutExample {
         mainFrame.add(new Button("Left Panel"), BorderLayout.WEST);
         mainFrame.add(centerPanel);
 
-        MyMenuBar menuBar = new MyMenuBar();
-        menuBar
-        .addMenu(
+        MyMenuBar menuBar = new MyMenuBar().addMenu(
             new MyMenu("File")
                 .addMenuItem(MyMenuItem.createMenuItem("Save"))
                 .addMenuItem(MyMenuItem.createMenuItem("Save As"))
