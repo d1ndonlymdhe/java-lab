@@ -148,7 +148,7 @@ public class Lab2 {
         t5.minutesToTime(100.5f);
         t5.display();
         Time t6 = new Time();
-        t6.secondsToTime(500);
+        t6.secondsToTime(82600);
         t6.display();
         System.out.println(Time.getCount());
     }
