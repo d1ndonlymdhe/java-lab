@@ -29,7 +29,7 @@ class Time {
     }
 
     public void setMinutes(int minute) throws InvalidValueException {
-        if (minute >= 0) {
+        if (minute >= 0 && minute < 60) {
             this.minutes = minute;
         } else {
             throw new InvalidValueException("Minute should be > 0");
@@ -41,7 +41,7 @@ class Time {
     }
 
     public void setSeconds(int seconds) throws InvalidValueException {
-        if (seconds >= 0) {
+        if (seconds >= 0 && seconds < 60) {
             this.seconds = seconds;
         } else {
             throw new InvalidValueException("Second should be > 0");

@@ -4,3 +4,6 @@
 _minted-*
 svg-inkscape
 *.class
+/swing/
+ignore_*
+Ignore_*
