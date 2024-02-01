@@ -4,7 +4,6 @@ interface resizeable {
     void resize(double factor);
 }
 public class ResizeRectangle extends Rectangle implements resizeable {
-    int x = 0;
     public ResizeRectangle(String name, String color, float length, float width) {
         super(name, color,length,width);
         this.length = length;
