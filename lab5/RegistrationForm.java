@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import react.Reactive;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -15,11 +17,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
-enum FRAMES{
-    MAIN,
-    REGISTER,
-    VIEW
-}
+import java.util.ArrayList;
+
+import java.awt.FlowLayout;
+import java.sql.*;
 
 
 
@@ -32,20 +33,46 @@ class FormInput extends JPanel {
 }
 
 
+class Student{
+    public String id;
+    public String name;
+    public String gender;
+    public String courses;
+    public String department;
+    public Student(String id, String name, String gender, String courses, String department) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.courses = courses;
+        this.department = department;
+    }
+}
+
+
+
+
+
 class Register extends JFrame {
-    public Register(){
+    public Register(Connection conn,JFrame prevFrame){
         super("Register Frame");
         JPanel formPanel = new JPanel(new GridLayout(6,1));
-
-        RegistrationForm.center(formPanel, new FormInput("Student Id", new JTextField()));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e->{
+            this.setVisible(false);
+            prevFrame.setVisible(true);
+        });
+        topPanel.add(backButton);
 
         JPanel genderPanel = new JPanel(new GridLayout(2,1));
         ButtonGroup genderGroup = new ButtonGroup();
 
         JRadioButton maleRadioButton = new JRadioButton("Male");
+        maleRadioButton.setActionCommand("Male");
         genderGroup.add(maleRadioButton);
 
         JRadioButton femaleRadioButton = new JRadioButton("Female");
+        femaleRadioButton.setActionCommand("Female");
         genderGroup.add(femaleRadioButton);
 
         genderPanel.add(maleRadioButton);
@@ -68,25 +95,170 @@ class Register extends JFrame {
         departmentComboBox.addItem("Phyics");
         departmentComboBox.addItem("Ecconomics");
 
-        RegistrationForm.center(formPanel, new FormInput("Student Name", new JTextField()));
+
+        JTextField idInput = new JTextField();
+        RegistrationForm.center(formPanel, new FormInput("Student Id", idInput));
+        JTextField studentInput = new JTextField();
+        RegistrationForm.center(formPanel, new FormInput("Student Name", studentInput));
         RegistrationForm.center(formPanel, new FormInput("Gender", genderPanel));
         RegistrationForm.center(formPanel, new FormInput("Courses", coursePanel));
         RegistrationForm.center(formPanel, new FormInput("Department", departmentComboBox));
-        RegistrationForm.center(formPanel, new JButton("Submit"));
-    
-        this.add(formPanel,BorderLayout.NORTH);
+        
+        JButton submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(e->{
+           
+            String name = studentInput.getText();
+            String id = idInput.getText();
+            String gender = genderGroup.getSelection().getActionCommand();
+            String courses = "";
+            String department = (String) departmentComboBox.getSelectedItem();
+
+            if(physicsCheckBox.isSelected()){
+                courses+="Physics,";
+            }
+            if(dsaCheckBox.isSelected()){
+                courses+="DSA,";
+            }
+            if(javaCheckBox.isSelected()){
+                courses+="Java,";
+            }
+            //print all info
+            System.out.println("Name: "+name);
+            System.out.println("Id: "+id);
+            System.out.println("Gender "+gender);
+            System.out.println("Courses: "+courses);
+            System.out.println("Department: "+department);
+
+            try{
+                PreparedStatement stmt = conn.prepareStatement("INSERT INTO students (id, name, gender, courses, department) VALUES (?,?,?,?,?)");
+                stmt.setString(1, id);
+                stmt.setString(2, name);
+                stmt.setString(3, gender);
+                stmt.setString(4, courses);
+                stmt.setString(5, department);
+                stmt.execute();
+            }catch(SQLException error){
+                error.printStackTrace();
+            }
+
+        });
+        
+        RegistrationForm.center(formPanel, submitBtn);
+        this.add(topPanel,BorderLayout.NORTH);
+        this.add(formPanel,BorderLayout.CENTER);
     }
 
+}
+
+class View extends JFrame {
+    private ArrayList<Student> students;
+    private int studentIdx;
+    private Student student;
+    public View(Connection conn,JFrame prevFrame){
+        super("View Frame");
+        studentIdx = 0;
+        students = new ArrayList<>();
+
+        student = null;
+        Reactive<JLabel,String> countLabel = new Reactive<JLabel,String>(new JLabel(), "", (comp,hook)->{
+            comp.setText(hook);
+        }, comp->{
+            comp.setText("");
+        });
+        Reactive<JPanel,Student> studentRenderer = new Reactive<JPanel,Student>(new JPanel(), students.size()>0?students.get(0):null, (comp,hook)->{
+            if(student!= null){
+                comp.setLayout(new GridLayout(5,1,10,20));
+                comp.add(new JLabel("Name: "+student.name));
+                comp.add(new JLabel("Id: "+student.id));
+                comp.add(new JLabel("Gender: "+student.gender));
+                comp.add(new JLabel("Courses: "+student.courses));
+                comp.add(new JLabel("Department: "+student.department)); 
+            }else{
+                comp.add(new JLabel("No Students"));
+            }
+        }, (comp)->{
+            comp.removeAll();
+        });
+        
+        try{
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM students");
+            while(rs.next()){
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String gender = rs.getString("gender");
+                String courses = rs.getString("courses");
+                String department = rs.getString("department");
+                students.add(new Student(id, name, gender, courses, department));
+            }
+            if(students.size()>0){
+                student = students.get(0);
+                studentRenderer.setHook(student);
+                countLabel.setHook("Student "+(1)+" of "+students.size());
+            }
+        }catch(SQLException error){
+            error.printStackTrace();
+        }
+
+
+        JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
+        JButton prevButton = new JButton("Prev");
+        prevButton.addActionListener(e->{
+            if(studentIdx>0){
+                studentIdx--;
+                student = students.get(studentIdx);
+                studentRenderer.setHook(student);
+                countLabel.setHook("Student "+(studentIdx+1)+" of "+students.size());
+            }
+        });
+        controlsPanel.add(prevButton);
+        
+        controlsPanel.add(countLabel.comp);
+
+        
+
+        JButton nextBtn = new JButton("Next");
+        nextBtn.addActionListener(e->{
+            if(studentIdx<students.size()-1){
+                studentIdx++;
+                student = students.get(studentIdx);
+                studentRenderer.setHook(student);
+                countLabel.setHook("Student "+(studentIdx+1)+" of "+students.size());
+            }
+        });
+        controlsPanel.add(nextBtn);
+
+        JPanel topPanel = new JPanel(new GridLayout(2,1));
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e->{
+            this.setVisible(false);
+            prevFrame.setVisible(true);
+        });
+        JPanel backContainerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        backContainerPanel.add(backButton);
+        topPanel.add(backContainerPanel);
+        topPanel.add(controlsPanel);
+        this.add(topPanel,BorderLayout.NORTH);
+        RegistrationForm.center(this, studentRenderer.comp, BorderLayout.CENTER);
+    }
 }
 
 
 
 public class RegistrationForm{
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws SQLException{
+
+        try{
+            Class.forName("org.mariadb.jdbc.Driver");
+        }catch(ClassNotFoundException error){
+            error.printStackTrace();
+        }
+
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/registration","mdhe","hojlund");
         JFrame mainFrame = new JFrame("Main Frame");
-        JFrame registerFrame = new Register();
-        JFrame viewFrame = new JFrame("View Frame");
+        JFrame registerFrame = new Register(conn,mainFrame);
+        JFrame viewFrame = new View(conn,mainFrame);
         mainFrame.setSize(1000, 1000);
         registerFrame.setSize(1000, 1000);
         viewFrame.setSize(1000, 1000);
@@ -98,7 +270,13 @@ public class RegistrationForm{
         });
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(new JButton("View"));
+        JButton viewBtn = new JButton("View");
+        viewBtn.addActionListener(e->{
+            viewFrame.setVisible(true);
+            mainFrame.setVisible(false);
+        });
+
+        buttonPanel.add(viewBtn);
         buttonPanel.add(registerBtn);
         center(mainFrame, buttonPanel);
         center(mainFrame, new JLabel("Student Info") ,BorderLayout.NORTH);
