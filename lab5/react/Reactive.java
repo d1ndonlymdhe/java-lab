@@ -41,8 +41,6 @@ public class Reactive<CompType extends Component, HookType> {
         hook = newHook;
         clearer.clearer(comp);
         renderer.renderer(comp, hook);
-        comp.revalidate();
-        comp.repaint();
     }
     
 }
