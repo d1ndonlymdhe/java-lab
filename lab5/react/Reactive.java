@@ -16,8 +16,6 @@ public class Reactive<CompType extends Component, HookType> {
         this.hook = hook;
         this.clearer = clearable;
         renderable.renderer(comp, hook);
-        comp.revalidate();
-        // comp.repaint();
     }
     public Reactive(Reactive<CompType,HookType> Rcomp, HookType hook, Renderable<CompType, HookType> renderable,
             Clearable<CompType> clearable) {
@@ -26,8 +24,6 @@ public class Reactive<CompType extends Component, HookType> {
         this.hook = hook;
         this.clearer = clearable;
         renderable.renderer(comp, hook);
-        comp.revalidate();
-        comp.repaint();
     }
     public void setRenderable(Renderable<CompType, HookType> renderable){
         this.renderer = renderable;
@@ -41,6 +37,8 @@ public class Reactive<CompType extends Component, HookType> {
         hook = newHook;
         clearer.clearer(comp);
         renderer.renderer(comp, hook);
+        comp.repaint();
+        comp.revalidate();
     }
     
 }
