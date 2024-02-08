@@ -376,7 +376,11 @@ public class RegistrationForm {
         Arrangement.allCenter(centerPanel, buttonPanel);
         mainFrame.add(centerPanel, BorderLayout.CENTER);
 
+        viewFrame.setUndecorated(true);
+        registerFrame.setUndecorated(true);
+        
         mainFrame.setVisible(true);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }
