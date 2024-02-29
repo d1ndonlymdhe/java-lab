@@ -341,9 +341,6 @@ class View extends JFrame {
 public class RegistrationForm {
     public static void main(String[] args) {
         List<Student> students = new ArrayList<Student>();
-        students.add(new Student("SE2022", "GITA ADHIKARI", "FEMALE", List.of("JAVA", "DSA"), "COMPUTER SCIENCE"));
-        students.add(new Student("SE2023", "GITA ADHIKARI", "FEMALE", List.of("JAVA", "DSA"), "COMPUTER SCIENCE"));
-        students.add(new Student("SE2023", "GITA ADHIKARI", "FEMALE", List.of("JAVA", "DSA"), "COMPUTER SCIENCE"));
         JFrame mainFrame = new JFrame("Main Frame");
         JFrame registerFrame = new Register(mainFrame, students);
         JFrame viewFrame = new View(mainFrame, students);
